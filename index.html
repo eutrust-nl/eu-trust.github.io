@@ -7,16 +7,27 @@
     <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="#statistics">Statistics</a></li>
-            <li><a href="#comparison">Compare</a></li>
-            <li><a href="/">Top</a></li>
-        </ul>
-    </nav>
     <header>
         <h1>Information about EU Citizens Trust in the European Union</h1>
     </header>
+    <nav>
+        <ul>
+            <li><a class="active" href="#" onclick="scrollToTop()">
+                <img src="res/img/brand.png" width="60px" height="10px">
+            </a></li>
+            <li><a href="#" onclick="scrollToTop('#statistics')" title="View the statistics">
+                Statistics
+            </a></li>
+            <li><a href="#" onclick="scrollToTop('#comparison')" title="Compare two or more countries">
+                Compare
+            </a></li>
+
+            <!-- Button that shows up when you scroll down, that takes you back to the top of the page -->
+            <li class="right"><a href="#" onclick="scrollToTop()" id="topNav" title="Go back to the top">
+                Top
+            </a></li>
+        </ul>
+    </nav>
     <article id="statistics">
         <section id="filters">
 
@@ -38,8 +49,6 @@
             Data for this graph was provided by the CBS of the Netherlands
         </a>
     </footer>
-
-
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/statistics.js"></script>
 </body>
