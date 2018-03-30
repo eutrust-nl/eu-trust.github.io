@@ -10,6 +10,20 @@
 
 #statistics, #comparison {
     height: 100vh;
+    border-bottom: #333333 2px solid;
+    box-sizing: border-box;
+}
+
+#topNav {
+    visibility: hidden;
+}
+
+
+/* Header style */
+header {
+    height: calc(100vh - 44px);
+    background: url("../res/img/eu.jpg") no-repeat center center fixed;
+    background-size: cover;
 }
 
 /*  Navigation bar style */
