@@ -21,9 +21,22 @@
 
 /* Header style */
 header {
-    height: calc(100vh - 44px);
-    background: url("../res/img/eu.jpg") no-repeat center center fixed;
+    padding-top: 40vh;
+    height: calc(100vh - 44px - 40vh);
+    line-height: calc(100vh - 44px - 40vh);
+    text-align: center;
+    background: url("../res/img/lukebrookes_multiculturalcities.jpg") no-repeat center center fixed;
     background-size: cover;
+
+}
+
+header h1{
+    line-height: normal;
+    margin: auto;
+    padding: 20px;
+    display: block;
+    width: 30vw;
+    background: rgba(255, 255, 255, 0.8);
 }
 
 /*  Navigation bar style */
