@@ -86,9 +86,9 @@ function convertRawData(filters) {
             D. Level of education - 3
 
         2. Topic
-            A. Score Level of Trust
+            A. Score Level of Trust (Scale of low 0 to high 10)
             and/or
-            B. Percentage of People that Trust
+            B. Percentage of People that Trust (People with score of 6 or higher)
                 in
                 a. Other people
                 b. Legal system
@@ -113,6 +113,8 @@ function convertRawData(filters) {
             G. 2014
          */
     }
+
+    // Create filtered stats
 
 
 
