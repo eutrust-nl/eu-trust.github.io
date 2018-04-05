@@ -1,5 +1,3 @@
-
-
 .right {
     float:right;
 }
@@ -8,18 +6,41 @@
     float:left;
 }
 
-#statistics, #comparison {
-    height: 100vh;
-    border-bottom: #333333 2px solid;
-    box-sizing: border-box;
-}
-
 #topNav {
     visibility: hidden;
 }
 
 
-/* Header style */
+/***
+  * Page wide style
+ ***/
+html, body{
+    font-family: Corbel, Arial, sans-serif;
+}
+
+/***
+  * Article style
+ ***/
+article {
+    min-height: 100vh;
+
+    margin-bottom: 100px;
+}
+/***
+  * Section style
+ ***/
+section {
+    width: 50vw;
+    min-width: 200px;
+    max-width: 980px;
+
+    margin: auto;
+}
+
+
+/***
+  * Header style
+ ***/
 header {
     padding-top: 40vh;
     height: calc(100vh - 44px - 40vh);
@@ -27,7 +48,6 @@ header {
     text-align: center;
     background: url("../res/img/lukebrookes_multiculturalcities.jpg") no-repeat center center fixed;
     background-size: cover;
-
 }
 
 header h1{
@@ -35,11 +55,15 @@ header h1{
     margin: auto;
     padding: 20px;
     display: block;
-    width: 30vw;
+    width: 50vw;
+    min-width: 200px;
+    max-width: 980px;
     background: rgba(255, 255, 255, 0.8);
 }
 
-/*  Navigation bar style */
+/***
+  * Navigation bar style
+ ***/
 nav {
     position: -webkit-sticky; /* Safari */
     position: sticky;
@@ -72,4 +96,22 @@ nav li a:hover:not(.active) {
 
 nav .active {
     background-color: #4CAF50;
+}
+
+/***
+  * Footer style
+ ***/
+footer {
+    text-align: center;
+    background-color: #111111;
+    padding: 50px;
+}
+
+footer a, footer a:visited {
+    text-decoration: none;
+    color: orange;
+}
+
+footer a:hover, footer a:active {
+    text-decoration: underline;
 }
