@@ -88,6 +88,8 @@ nav li a {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+    -webkit-transition: 0.5s; /* Safari */
+    transition: 0.5s;
 }
 
 nav li a:hover:not(.active) {
@@ -96,6 +98,8 @@ nav li a:hover:not(.active) {
 
 nav .active {
     background-color: #4CAF50;
+    -webkit-transition: 0.5s; /* Safari */
+    transition: 0.5s;
 }
 
 /***

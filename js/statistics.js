@@ -13,8 +13,10 @@ let loadedJSONs = 0;
 let rawData = {};   // container object for api data
 let statistics;     // container for displayed stats
 let defaultFilters = {  // default selected filters upon page load
+    "PersonalCharacteristics": "*",
     "Countries": ["Germany", "Netherlands", "Greece", "France", "United Kingdom"],
-
+    "Topic": "*",
+    "Period": [2014, 2012]
 };
 let defaultGroup = "Counties";  // default grouping upon page load
 
@@ -68,7 +70,7 @@ function scrollToTop(id) {
 
     $('html, body').animate({
         scrollTop: position
-    }, 200);
+    }, 500);
 }
 
 /* Show/hide "back to top" link in navigation
@@ -77,12 +79,36 @@ function scrollToTop(id) {
  * */
 $(window).on( "scroll", function() {
     let $topNav = $("#topNav");
-    if ($('html, body').scrollTop() > $("header").height()) {
+    let $scroll = $('html, body').scrollTop();
+    let $activeNav = $(".active");
+    let navOffset = $("nav").height();
+    let $brandNav = $("#brandNav");
+
+    if ($scroll > $("header").height()) {
         $topNav.css("visibility", "visible");
         $topNav.show("fast");
     } else {
         $topNav.hide("fast");
     }
+
+    // Change active highlight
+    if($scroll >= $("#comparison").position().top - navOffset) {
+        let $compNav = $("#compNav");
+        if ($activeNav !== $compNav) {
+            $activeNav.removeClass("active");
+            $compNav.addClass("active");
+        }
+    } else if($scroll >= $("#statistics").position().top - navOffset) {
+        let $statNav = $("#statNav");
+        if ($activeNav !== $statNav) {
+            $activeNav.removeClass("active");
+            $statNav.addClass("active");
+        }
+    } else if ($activeNav !== $brandNav) {
+        $activeNav.removeClass("active");
+        $brandNav.addClass("active");
+    }
+
 });
 
 
@@ -95,6 +121,13 @@ function generateStatsFromData(filters) {
     if (filters !== undefined) {
         // create stats with filters
         console.log("Applying filters", filters);
+
+        // Iterate over all properties of all
+        $().each(rawData, function(index, object) {
+            $().each(object, function(key, value) {
+
+            });
+        });
         return;
 
         /* Possible multiple select filters
@@ -135,10 +168,7 @@ function generateStatsFromData(filters) {
     }
 
     // Create filtered stats if no filter is given
-
-
-
-
+    generateStatsFromData(defaultFilters);
 }
 
 
