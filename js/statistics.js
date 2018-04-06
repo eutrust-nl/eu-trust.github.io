@@ -11,7 +11,14 @@ let totalJSONs = Object.keys(URLS).length;
 let loadedJSONs = 0;
 
 let rawData = {};   // container object for api data
-let statistics;
+let statistics;     // container for displayed stats
+let defaultFilters = {  // default selected filters upon page load
+    "PersonalCharacteristics": "*",
+    "Countries": ["Germany", "Netherlands", "Greece", "France", "United Kingdom"],
+    "Topic": "*",
+    "Period": [2014, 2012]
+};
+let defaultGroup = "Counties";  // default grouping upon page load
 
 
 /***************************************************
@@ -23,8 +30,9 @@ let statistics;
 $(function() {
     getJSONs(function() {
         // 1. convert fetched data into usable stats
-        convertRawData();
+        generateStatsFromData();
         // 2. update display with stats
+        updateDisplay();
     });
 });
 
@@ -34,7 +42,21 @@ $(function() {
  * Display and Handle Stuff
  *
  ***************************************************/
+/* Display updating function
+ * Kicks of all functions related to displaying of statistics and other
+ * related stuff
+ * */
+function updateDisplay() {
+    // 1. Filter Categories - multiple divs with checkboxes and select all button
 
+    // 2. Statistics from selected filters - show bar charts base on statistics
+
+    // 3. Generate tabs for interesting facts for selected categories
+
+    // 4. Generate sentences highlighting given facts for categories
+
+    //[5. Add an "Take the eu trust test" section]
+}
 
 
 /* Scroll control
@@ -48,7 +70,7 @@ function scrollToTop(id) {
 
     $('html, body').animate({
         scrollTop: position
-    }, 200);
+    }, 500);
 }
 
 /* Show/hide "back to top" link in navigation
@@ -57,12 +79,36 @@ function scrollToTop(id) {
  * */
 $(window).on( "scroll", function() {
     let $topNav = $("#topNav");
-    if ($('html, body').scrollTop() > $("header").height()) {
+    let $scroll = $('html, body').scrollTop();
+    let $activeNav = $(".active");
+    let navOffset = $("nav").height();
+    let $brandNav = $("#brandNav");
+
+    if ($scroll > $("header").height()) {
         $topNav.css("visibility", "visible");
         $topNav.show("fast");
     } else {
         $topNav.hide("fast");
     }
+
+    // Change active highlight
+    if($scroll >= $("#comparison").position().top - navOffset) {
+        let $compNav = $("#compNav");
+        if ($activeNav !== $compNav) {
+            $activeNav.removeClass("active");
+            $compNav.addClass("active");
+        }
+    } else if($scroll >= $("#statistics").position().top - navOffset) {
+        let $statNav = $("#statNav");
+        if ($activeNav !== $statNav) {
+            $activeNav.removeClass("active");
+            $statNav.addClass("active");
+        }
+    } else if ($activeNav !== $brandNav) {
+        $activeNav.removeClass("active");
+        $brandNav.addClass("active");
+    }
+
 });
 
 
@@ -71,10 +117,17 @@ $(window).on( "scroll", function() {
  * Data and Statistics Stuff
  *
  ***************************************************/
-function convertRawData(filters) {
+function generateStatsFromData(filters) {
     if (filters !== undefined) {
         // create stats with filters
         console.log("Applying filters", filters);
+
+        // Iterate over all properties of all
+        $().each(rawData, function(index, object) {
+            $().each(object, function(key, value) {
+
+            });
+        });
         return;
 
         /* Possible multiple select filters
@@ -114,10 +167,8 @@ function convertRawData(filters) {
          */
     }
 
-    // Create filtered stats
-
-
-
+    // Create filtered stats if no filter is given
+    generateStatsFromData(defaultFilters);
 }
 
 
