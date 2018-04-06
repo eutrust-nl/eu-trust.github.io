@@ -16,16 +16,31 @@
  ***/
 html, body{
     font-family: Corbel, Arial, sans-serif;
+    background: url("../res/img/sarahg_CanadianCulturalDiversity.jpg") no-repeat center center fixed;
+    background-size: cover;
 }
+
 
 /***
   * Article style
  ***/
 article {
-    min-height: 100vh;
-
-    margin-bottom: 100px;
+    margin: 50px 0;
 }
+
+article h2 {
+    line-height: normal;
+    margin: auto;
+    padding: 20px;
+    display: block;
+    width: 50vw;
+    min-width: 200px;
+    max-width: 980px;
+    background: rgba(255, 205, 0, 0.8);
+    text-align: center;
+}
+
+
 /***
   * Section style
  ***/
@@ -34,7 +49,46 @@ section {
     min-width: 200px;
     max-width: 980px;
 
+    background: rgba(255, 255, 255, 0.9);
+
     margin: auto;
+    padding: 50px 20px;
+
+    box-sizing: border-box;
+}
+
+#filters div {
+    border-bottom:1px solid #00309A;
+    margin-bottom: 10px;
+}
+#filters label {
+    display: inline-block;
+    margin: 5px;
+    padding:10px;
+    border: #00309A 1px dashed;
+    transition: 1s;
+}
+#filters label:hover {
+    background: #FFCD00;
+    cursor: pointer;
+    border: #00309A 1px solid;
+    transition: 0.1s;
+}
+
+#filters label:active {
+    background: #002067;
+    color: #fff;
+    border: #FFCD00 1px solid;
+}
+
+#filters input {
+    margin-right: 5px;
+}
+
+#filters .active {
+    background: #00309A;
+    color: #fff;
+    border: #FFCD00 1px solid;
 }
 
 
@@ -75,7 +129,7 @@ nav ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: #222222;
 }
 
 nav ul li {
@@ -88,18 +142,18 @@ nav li a {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
-    -webkit-transition: 0.5s; /* Safari */
     transition: 0.5s;
 }
 
 nav li a:hover:not(.active) {
-    background-color: #111;
+    background-color: #00309A;
+    color: #FFCD00;
 }
 
 nav .active {
-    background-color: #4CAF50;
-    -webkit-transition: 0.5s; /* Safari */
-    transition: 0.5s;
+    background-color: #FFCD00;
+    color: #111111;
+    transition: 0.1s;
 }
 
 /***
@@ -113,7 +167,7 @@ footer {
 
 footer a, footer a:visited {
     text-decoration: none;
-    color: orange;
+    color: #FFCD00;
 }
 
 footer a:hover, footer a:active {
