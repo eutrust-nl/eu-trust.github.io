@@ -15,13 +15,18 @@ let loadedJSONs = 0;
 let rawData = {};   // container object for api data
 let statistics;     // container for displayed stats
 let defaultFilters = {  // default selected filters upon page load
-    "PersonalCharacteristics": "*",
+    "PersonalCharacteristics": ["Total"],
+    "Topics": ["*"],
     "Countries": ["Germany", "The Netherlands", "Greece", "France", "United Kingdom"],
-    "Topics": "*",
-    "Periods": [2014, 2012]
+    "Periods": ["2014"]
 };
 
-let activeFilters = defaultFilters;
+let activeFilters = {
+    "PersonalCharacteristics": [],
+    "Topics": [],
+    "Countries": [],
+    "Periods": []
+};
 
 /***************************************************
  *
@@ -67,37 +72,53 @@ function updateDisplay() {
 function initFilters() {
     let $filters = $("#filters");
     $filters.html(
-        "<form onchange='updateFilters()'>" +
-            "<div id='character'>" +
+        "<form onchange='updateDisplay()'>" +
+            "<div id='PersonalCharacteristics'>" +
                 "<h3>Personal Characteristics</h3>" +
             "</div>" +
-            "<div id='topic'>" +
+            "<div id='Topics'>" +
                 "<h3>Topics</h3>" +
+                "<div id='Score'>" +
+                    "<h4 title='Trust in other people and in a number of political and organisational institutions in terms of a mark from 0 to 10, where 0 equals no trust at all and 10 equals complete trust.'>Evaluation of trust in</h4>" +
+                "</div>" +
+                "<div id='Percentile'>" +
+                    "<h4 title='The percentage of people assigning a score of 6 or higher in answer to the questions about trust in other people and a number of political and organisational institutions, where 0 means no trust at all and 10 means complete trust.'>Percentage of people with trust in</h4>" +
+                "</div>" +
             "</div>" +
-            "<div id='country'>" +
+            "<div id='Countries'>" +
                 "<h3>Countries</h3>" +
             "</div>" +
-            "<div id='period'>" +
+            "<div id='Periods'>" +
                 "<h3>Periods</h3>" +
             "</div>" +
-        "</form>" +
-        "<p>Group by " +
-            "<select name='group' onchange='updateFilters()'>" +
-                "<option value='character'>Personal Characteristic</option>" +
-                "<option value='topic' selected>Topic</option>" +
-                "<option value='country'>Country</option>" +
-                "<option value='period'>Periods</option>" +
-            "</select>" +
-        "</p>"
+            "<p>Group by " +
+                "<select name='group'>" +
+                    "<option value='PersonalCharacteristics'>Personal Characteristic</option>" +
+                    "<option value='Topics'>Topic</option>" +
+                    "<option value='Countries'>Country</option>" +
+                    "<option value='Periods' selected>Periods</option>" +
+                "</select>" +
+            "</p>" +
+        "</form>"
     );
 
     // Personal Characteristics
-    let characterContainer = $("#character", $filters);
+    let characterContainer = $("#PersonalCharacteristics", $filters);
     $.each(rawData[URLS.PERSONAL_CHARACTERISTICS], function (index, object) {
         // Category groups apply
-        characterContainer.append(
-            "<label>" +
-                "<input type='checkbox' name='character' value='" + object["Key"] + "'>" +
+        let categoryGroup = getCategoryGroupByID(object["CategoryGroupID"])["Title"];
+        let categoryContainer = $("#" + categoryGroup.replace(/\s/g,''), characterContainer);
+
+        if (categoryContainer.length === 0) {
+            categoryContainer = $("<div id='" + categoryGroup.replace(/\s/g,'') + "'>" +
+                "<h4>" + categoryGroup + "</h4>" +
+                "</div>");
+            $(characterContainer).append(categoryContainer);
+        }
+
+        categoryContainer.append(
+            "<label title='" + object["Description"] +"'>" +
+                "<input type='checkbox' name='PersonalCharacteristics' value='" + object["Title"] + "'>" +
                 object["Title"] +
             "</label>"
         );
@@ -105,12 +126,13 @@ function initFilters() {
     });
 
     // Topics
-    let topicContainer = $("#topic", $filters);
+    let scoreContainer = $("#Score", $filters);
+    let percentileContainer = $("#Percentile", $filters);
     $.each(rawData[URLS.DATA_PROPERTIES], function(index, object) {
         if (object["Type"] === "Topic") {
-            topicContainer.append(
-                "<label>" +
-                    "<input type='checkbox' name='topic' value='" + object["Key"] + "'>" +
+            ((object["Unit"] === "score") ? scoreContainer : percentileContainer).append(
+                "<label title='" + object["Description"] +"'>" +
+                    "<input type='checkbox' name='Topics' value='" + object["Title"] + "'>" +
                     object["Title"] +
                 "</label>"
             );
@@ -118,12 +140,22 @@ function initFilters() {
     });
 
     // Countries
-    let countryContainer = $("#country", $filters);
+    let countryContainer = $("#Countries", $filters);
     $.each(rawData[URLS.COUNTRIES], function(index, object) {
+
         // Category groups apply
-        countryContainer.append(
-            "<label>" +
-                "<input type='checkbox' name='country' value='" + object["Key"] + "'>" +
+        let categoryGroup = getCategoryGroupByID(object["CategoryGroupID"])["Title"];
+        let categoryContainer = $("#" + categoryGroup.replace(/\s/g,''), countryContainer);
+        if (categoryContainer.length === 0) {
+            categoryContainer = $("<div id='" + categoryGroup.replace(/\s/g,'') + "'>" +
+                "<h4>" + categoryGroup + "</h4>" +
+                "</div>");
+            $(countryContainer).append(categoryContainer);
+        }
+
+        categoryContainer.append(
+            "<label title='" + object["Description"] +"'>" +
+                "<input type='checkbox' name='Countries' value='" + object["Title"] + "'>" +
                 object["Title"] +
             "</label>"
         );
@@ -131,63 +163,18 @@ function initFilters() {
     });
 
     // Periods
-    let periodContainer = $("#period", $filters);
+    let periodContainer = $("#Periods", $filters);
     $.each(rawData[URLS.PERIODS], function(index, object) {
-        //console.log(object["Key"], object["Title"]);
         periodContainer.append(
-            "<label>" +
-                "<input type='checkbox' name='period' value='" + object["Key"] + "'>" +
+            "<label title='" + object["Description"] +"'>" +
+                "<input type='checkbox' name='Periods' value='" + object["Title"] + "'>" +
                 object["Title"] +
             "</label>"
         );
     });
 
     $.each($("input", $filters), function(index, item) {
-        switch (item.name) {
-            case "character":
-                if (activeFilters.PersonalCharacteristics === "*") {
-                    if (getCharacteristicForKey(item.value) === "Total") {
-                        item.checked = true;
-                    }
-                    break;
-                }
-                $.each(activeFilters.PersonalCharacteristics, function (index, characteristic) {
-                    if (getCharacteristicForKey(item.value) === characteristic)
-                        item.checked = true;
-                });
-                break;
-
-            case "topic":
-                if (activeFilters.Topics === "*") {
-                    item.checked = true;
-                    break;
-                }
-                $.each(activeFilters.Topics, function (index, topic) {
-                    if (getTopicForKey(item.value) === topic)
-                        item.checked = true;
-                });
-                break;
-            case "country":
-                if (activeFilters.Countries === "*") {
-                    item.checked = true;
-                    break;
-                }
-                $.each(activeFilters.Countries, function (index, country) {
-                    if (getCountryForKey(item.value) === country)
-                        item.checked = true;
-                });
-                break;
-            case "period":
-                if (activeFilters.Periods === "*") {
-                    item.checked = true;
-                    break;
-                }
-                $.each(activeFilters.Periods, function (index, period) {
-                    if (getPeriodForKey(item.value) === period)
-                        item.checked = true;
-                });
-                break;
-        }
+        item.checked = defaultFilters[item.name][0] === "*" || $.inArray(item.value, defaultFilters[item.name]) !== -1;
     });
 }
 
@@ -195,13 +182,25 @@ function updateFilters() {
     let $filters = $("#filters");
     let groupTopic = $("select", $filters).find(":selected")[0].value;
 
-    console.log("Filters changed");
-
     $.each($("input", $filters), function(index, item) {
         if (item.name === groupTopic) {
             item.type = "radio";
-        } else {
+        } else if (item.type === "radio"){
             item.type = "checkbox";
+        }
+    });
+
+    $.each($("input", $filters), function(index, item) {
+        index = $.inArray(item.value, activeFilters[item.name]);
+        // If filter is not in active filter list, add it
+        if (item.checked && index === -1) {
+            activeFilters[item.name].push(item.value);
+            //console.log(item.value, "filter added under", item.name);
+        }
+        // Otherwise, if the filter is not active and in active filter list, remove it
+        else if (!item.checked && index > -1) {
+            activeFilters[item.name].splice(index, 1);
+            //console.log(item.value, "filter removed from", item.name);
         }
     });
 

@@ -57,7 +57,10 @@ section {
     box-sizing: border-box;
 }
 
-#filters div {
+#filters h4 {
+    margin: 10px 5px;
+}
+#filters form > div {
     border-bottom:1px solid #00309A;
     margin-bottom: 10px;
 }
@@ -89,6 +92,11 @@ section {
     background: #00309A;
     color: #fff;
     border: #FFCD00 1px solid;
+}
+
+#filters button {
+    min-width: 100px;
+    height: 50px;
 }
 
 
