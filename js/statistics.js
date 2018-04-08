@@ -261,25 +261,17 @@ function updateStatistics() {
     $.each(statistics, function(cKey, periods) {
         // create country div with chart outline
         let graphContainer = $(
-            "<div class='graph-container'>" +
-                "<table id='"+ cKey + "-graph' class='bar-graph'>" +
+            "<div class='graph-container' id='"+ cKey + "-graph'>" +
+                "<table class='bar-graph'>" +
                     "<caption>" + getCountryForKey(cKey) + "</caption>" +
                 "</table>" +
-            "</div>" +
-            "<div id=\"ticks\">\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>10.0</p></div>\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>9.0</p></div>\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>8.0</p></div>\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>7.0</p></div>\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>6.0</p></div>\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>5.0</p></div>\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>4.0</p></div>\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>3.0</p></div>\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>2.0</p></div>\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>1.0</p></div>\n" +
-            "<div class=\"tick\" style=\"height: 59px;\"><p>0.0</p></div>\n" +
             "</div>"
         ).appendTo($graphs);
+
+        let ticks = $("<div class=\"ticks\"></div>").appendTo($graphs);
+        for(let i = 10; i >= 0; i--) {
+            ticks.append("<div class=\"tick\" style=\"height: " + (400/10) + "px;\"><p>"+ i +".0</p></div>\n");
+        }
 
         let legend = $(
             "<thead>" +
@@ -300,7 +292,7 @@ function updateStatistics() {
             // create graphics/scale
 
             // Add element to legend
-            let periodLegend = $("<th class='" + pKey + "-graph'>" +
+            let periodLegend = $("<th class='legend " + pKey + "-graph'>" +
                 getPeriodForKey(pKey)
                 + "</th>").appendTo($("tr", legend));
 
