@@ -15,10 +15,10 @@ let loadedJSONs = 0;
 let rawData = {};   // container object for api data
 let statistics;     // container for displayed stats
 let defaultFilters = {  // default selected filters upon page load
-    "PersonalCharacteristics": ["Total"],
-    "Topics": ["Other people%"],
-    "Countries": ["Germany", "The Netherlands", "Greece", "France", "United Kingdom"],
-    "Periods": ["2002","2006","2010","2014"]
+    "PersonalCharacteristics":  ["Total"],
+    "Topics":                   ["Other people"],
+    "Countries":                ["Germany", "The Netherlands", "Greece", "France", "United Kingdom"],
+    "Periods":                  ["2002","2006","2010","2014"]
 };
 
 let activeFilters = {
@@ -232,12 +232,10 @@ function updateFilters() {
         // If filter is not in active filter list, add it
         if (item.checked && index === -1) {
             activeFilters[item.name].push(item.value);
-            //console.log(item.value, "filter added under", item.name);
         }
         // Otherwise, if the filter is not active and in active filter list, remove it
         else if (!item.checked && index > -1) {
             activeFilters[item.name].splice(index, 1);
-            //console.log(item.value, "filter removed from", item.name);
         }
     });
 
@@ -252,8 +250,71 @@ function updateFilters() {
 }
 
 function updateStatistics() {
+    let $graphs = $("#graphs");
+    $graphs.html("");
+
     // convert fetched data into usable stats based on filters
     generateStatsFromData();
+
+
+    // Bar chart - for score values
+    $.each(statistics, function(cKey, periods) {
+        // create country div with chart outline
+        let graphContainer = $(
+            "<div class='graph-container'>" +
+                "<table id='"+ cKey + "-graph' class='bar-graph'>" +
+                    "<caption>" + getCountryForKey(cKey) + "</caption>" +
+                "</table>" +
+            "</div>" +
+            "<div id=\"ticks\">\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>10.0</p></div>\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>9.0</p></div>\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>8.0</p></div>\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>7.0</p></div>\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>6.0</p></div>\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>5.0</p></div>\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>4.0</p></div>\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>3.0</p></div>\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>2.0</p></div>\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>1.0</p></div>\n" +
+            "<div class=\"tick\" style=\"height: 59px;\"><p>0.0</p></div>\n" +
+            "</div>"
+        ).appendTo($graphs);
+
+        let legend = $(
+            "<thead>" +
+                "<tr>" +
+                    "<th></th>" +
+                "</tr>" +
+            "</thead>"
+        ).appendTo($("table", graphContainer));
+
+        let graph = $(
+            "<tbody>" +
+            "</tbody>"
+        ).appendTo($("table", graphContainer));
+
+        let periodGraph = undefined;
+
+        $.each(periods, function(pKey, value) {
+            // create graphics/scale
+
+            // Add element to legend
+            let periodLegend = $("<th class='" + pKey + "-graph'>" +
+                getPeriodForKey(pKey)
+                + "</th>").appendTo($("tr", legend));
+
+            // Create graph container
+            if (periodGraph === undefined)
+                periodGraph = $("<tr class='period' id='" + cKey + "-" + pKey + "'>" +
+                    "<th scope='row'>" + getTopicForKey(activeFilters.Topics[0]) + "</th>" +
+                    "</tr>").appendTo(graph);
+
+            let periodChart = $("<td class='" + pKey + "-graph bar' style='height: " + ((value / 10.0) * 500.0) + "px;'>" +
+                "<p>" + ((value !== null) ? value : "N/A") + "</p>" +
+                "</td>").appendTo(periodGraph);
+        });
+    });
 }
 
 function updateFactTabs() {
@@ -373,13 +434,47 @@ function generateStatsFromData() {
          */
     // create stats with filters
     console.log("Applying filters", activeFilters);
+    statistics = {};
+    $.each(activeFilters.Countries, function(cIndex, cKey) {
+        statistics[cKey] = {};
+    });
+
+    console.log("Stats structure:", statistics);
+
 
     // Iterate over all properties of all
-    $.each(rawData[URLS.TYPED_DATA_SET], function(index, object) {
-        $.each(object, function(key, value) {
+    $.each(rawData[URLS.TYPED_DATA_SET], function(i, obj) {
+        let filtersApply = true;
+        $.each(obj, function(key, value) {
+            switch(key) {
+                case "Countries":
+                    if ($.inArray(value, activeFilters.Countries) === -1) {
+                        filtersApply = false;
+                        return;
+                    }
+                    break;
+                case "Periods":
+                    if ($.inArray(value, activeFilters.Periods) === -1) {
+                        filtersApply = false;
+                        return;
+                    }
+                    break;
+                case "PersonalCharacteristics":
+                    if ($.inArray(value, activeFilters.PersonalCharacteristics) === -1) {
+                        filtersApply = false;
+                        return;
+                    }
+                    break;
+            }
 
         });
+        if (filtersApply) {
+            statistics[obj["Countries"]][obj["Periods"]] = obj[activeFilters.Topics[0]];
+        }
     });
+
+    console.log("Stats filtered:", statistics);
+
 }
 
 function getCategoryGroupByID(id) {

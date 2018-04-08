@@ -176,3 +176,11 @@ footer a, footer a:visited {
 footer a:hover, footer a:active {
     text-decoration: underline;
 }
+
+/* Graph styles */
+
+.bar-graph {
+    width:100%;
+    height:400px;
+    position: relative;
+}
