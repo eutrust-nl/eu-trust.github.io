@@ -61,8 +61,9 @@ section {
     margin: 10px 5px;
 }
 #filters form > div {
-    border-bottom:1px solid #00309A;
+    border:3px solid #00309A;
     margin-bottom: 10px;
+    padding: 5px;
 }
 #filters label {
     display: inline-block;
@@ -93,12 +94,6 @@ section {
     color: #fff;
     border: #FFCD00 1px solid;
 }
-
-#filters button {
-    min-width: 100px;
-    height: 50px;
-}
-
 
 /***
   * Header style
