@@ -178,12 +178,18 @@ footer a:hover, footer a:active {
 }
 
 /* Graph styles */
+.graph-container {
+    width: 90%;
+    margin: auto;
+}
 
 .bar-graph {
     width:100%;
     height:400px;
     position: relative;
     background: transparent;
+    font-family: "Century Gothic", sans-serif;
+    font-size: 12px;
 }
 
 .bar-graph caption {
@@ -193,13 +199,17 @@ footer a:hover, footer a:active {
     top: -40px;
     position: relative;
     font-weight: bold;
-    text-decoration: #111111 underline;
+    text-decoration: underline;
+    font-size: x-large;
+    z-index: 10;
 }
 
 .bar-graph tr, .bar-graph th, .bar-graph td {
     position: absolute;
     bottom: 0;
-    /*width: 150px; determined via js */
+    z-index: 2;
+
+    width: 100%;
     text-align: center;
 }
 
@@ -213,10 +223,10 @@ footer a:hover, footer a:active {
 }
 
 .bar-graph thead tr {
-    left:100%;
+    left:90%;
     top:50%;
     bottom:auto;
-    margin: 0 0 0 -10em;
+    margin: -2em 0 0 5em;
 }
 .bar-graph thead th {
     width: 7.5em;
@@ -254,8 +264,6 @@ footer a:hover, footer a:active {
 }
 
 .bar-graph .bar {
-    /*width: 60px; determined via js */
-    width: 60px;
     border: 1px solid transparent;
     border-bottom: none;
     color: #FFCD00;
@@ -267,11 +275,19 @@ footer a:hover, footer a:active {
     opacity: .4;
 }
 
+.ticks-container {
+    width: 90%;
+    margin: auto;
+}
+
 .ticks {
+    font-family: "Century Gothic", sans-serif;
+    font-size:12px;
     position: relative;
     top: -400px;
     left: 2px;
     width: 100%;
+    z-index: 1;
     height: 400px;
     margin-bottom: -300px;
 }
@@ -282,8 +298,10 @@ footer a:hover, footer a:active {
 }
 
 .ticks .tick p {
+    text-align: center;
+    min-width: 2em;
     position: absolute;
-    left: -5em;
     top: -0.8em;
     margin: 0 0 0 0.5em;
+    left: -4em;
 }

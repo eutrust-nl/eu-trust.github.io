@@ -253,6 +253,8 @@ function updateStatistics() {
     let $graphs = $("#graphs");
     $graphs.html("");
 
+    let barWidth = 1 / activeFilters.Periods.length * 100;
+
     // convert fetched data into usable stats based on filters
     generateStatsFromData();
 
@@ -268,9 +270,9 @@ function updateStatistics() {
             "</div>"
         ).appendTo($graphs);
 
-        let ticks = $("<div class=\"ticks\"></div>").appendTo($graphs);
+        let ticks = $("<div class='ticks-container'><div class=\"ticks\"></div></div>").appendTo($graphs);
         for(let i = 10; i >= 0; i--) {
-            ticks.append("<div class=\"tick\" style=\"height: " + (400/10) + "px;\"><p>"+ i +".0</p></div>\n");
+            $(".ticks", ticks).append("<div class=\"tick\" style=\"height: " + (400/10) + "px;\"><p>"+ i +".0</p></div>\n");
         }
 
         let legend = $(
@@ -286,7 +288,7 @@ function updateStatistics() {
             "</tbody>"
         ).appendTo($("table", graphContainer));
 
-        let periodGraph = undefined;
+        let periodGraph = undefined, counter = 0;
 
         $.each(periods, function(pKey, value) {
             // create graphics/scale
@@ -295,6 +297,7 @@ function updateStatistics() {
             let periodLegend = $("<th class='legend " + pKey + "-graph'>" +
                 getPeriodForKey(pKey)
                 + "</th>").appendTo($("tr", legend));
+            $(periodLegend).css("top", (counter * 2.75) + "em");
 
             // Create graph container
             if (periodGraph === undefined)
@@ -305,16 +308,20 @@ function updateStatistics() {
             let periodChart = $("<td class='" + pKey + "-graph bar' style='height: " + ((value / 10.0) * 500.0) + "px;'>" +
                 "<p>" + ((value !== null) ? value : "N/A") + "</p>" +
                 "</td>").appendTo(periodGraph);
+            $(periodChart).css("width", barWidth +"%");
+            $(periodChart).css("left", (barWidth*counter) +"%");
+
+            counter++;
         });
     });
 }
 
 function updateFactTabs() {
-
+    // TODO
 }
 
 function updateFacts() {
-
+    // TODO
 }
 
 
